@@ -70,18 +70,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public Boolean searchCustomer(){
+    public List<CustomerModel> searchCustomer(String s){
+        List<CustomerModel> returnList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        String querySearch = "SELECT * FROM CUSTOMER_TABLE WHERE (CUSTOMER_NAME LIKE '%Do%' OR ID LIKE '%2%') ";
+        String querySearch = "SELECT * FROM CUSTOMER_TABLE WHERE (CUSTOMER_NAME LIKE '%Douglas%' OR ID LIKE '%2%') ";
+
+
 
         //Execute query
         Cursor cursor = db.rawQuery(querySearch, null);
 
+        //check if empty move to the first result in a result set
         if(cursor.moveToFirst()){
-            return true;
+            //if there are result i want to loop through the result . Then create new customer object for each row it can be a table or a list
+            do {
+                int customerID = cursor.getInt(0); //at zero column position
+                String customerName = cursor.getString(1);
+                int customerAge = cursor.getInt(2);
+                boolean customerActive = cursor.getInt(3) == 1 ? true : false;
+
+                CustomerModel newCustomer = new CustomerModel(customerID, customerName, customerAge, customerActive);
+                returnList.add(newCustomer);
+
+            }//do this as long as we have new line
+            while (cursor.moveToNext());
         }else {
-            return false;
+            //if there are no anything in the database we will not anything to the list
         }
+
+        cursor.close();
+        db.close();
+        return returnList;
     }
 
     public List<CustomerModel> getEveryone() {

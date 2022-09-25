@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     //references to buttons and other controls on the layout
     Button btn_add, btn_viewAll;
-    SearchView btn_searchList;
+    SearchView search_barr;
     EditText etc_customerName, et_age;
     Switch sw_activeCustomer;
     ListView lv_customerList;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         etc_customerName = findViewById(R.id.etc_customerName);
         sw_activeCustomer = findViewById(R.id.sw_active);
         lv_customerList = findViewById((R.id.lv_customerList));
-        btn_searchList = findViewById(R.id.search_barr);
+        search_barr = findViewById(R.id.search_barr);
 
         databaseHelper = new DatabaseHelper(MainActivity.this);
 
@@ -100,23 +100,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        btn_searchList.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        btn_searchList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        search_barr.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                databaseHelper.searchCustomer(s);
                 Log.e("MainActivity", "Search Submitted:" + s);
+                customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.searchCustomer(s));
+                lv_customerList.setAdapter(customerArrayAdapter);
+                //Toast.makeText(MainActivity.this, "Search submitted", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Log.e("MainActivity", "Text:" + s);
+//                Log.e("MainActivity", "Text:" + s);
 
                 return false;
             }
