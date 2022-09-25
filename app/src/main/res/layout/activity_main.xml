@@ -16,6 +16,7 @@
         android:ems="10"
         android:hint="@string/CustomerAge"
         android:inputType="number"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etc_customerName" />
@@ -26,11 +27,21 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:minHeight="48dp"
         android:text="@string/ActiveCustomer"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/search_barr"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_age" />
+
+    <SearchView
+        android:id="@+id/search_barr"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sw_active"
+        app:layout_constraintTop_toTopOf="@+id/sw_active" />
 
     <Button
         android:id="@+id/btn_viewAll"
@@ -54,7 +65,8 @@
     <ListView
         android:id="@+id/lv_customerList"
         android:layout_width="409dp"
-        android:layout_height="558dp"
+        android:layout_height="0dp"
+
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -73,8 +85,11 @@
         android:ems="10"
         android:hint="@string/CustomerName"
         android:inputType="textPersonName"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

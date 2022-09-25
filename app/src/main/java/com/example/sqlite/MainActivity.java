@@ -3,25 +3,38 @@ package com.example.sqlite;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     //references to buttons and other controls on the layout
     Button btn_add, btn_viewAll;
+    SearchView btn_searchList;
     EditText etc_customerName, et_age;
     Switch sw_activeCustomer;
     ListView lv_customerList;
+    ArrayAdapter customerArrayAdapter;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         btn_add = findViewById(R.id.btn_add);
         btn_viewAll = findViewById(R.id.btn_viewAll);
@@ -29,6 +42,13 @@ public class MainActivity extends AppCompatActivity {
         etc_customerName = findViewById(R.id.etc_customerName);
         sw_activeCustomer = findViewById(R.id.sw_active);
         lv_customerList = findViewById((R.id.lv_customerList));
+        btn_searchList = findViewById(R.id.search_barr);
+
+        databaseHelper = new DatabaseHelper(MainActivity.this);
+
+        customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getEveryone());
+        lv_customerList.setAdapter(customerArrayAdapter);
+
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,13 +67,58 @@ public class MainActivity extends AppCompatActivity {
                 boolean success = databaseHelper.addOne(customerModel);
 
                 Toast.makeText(MainActivity.this, "Success" + success, Toast.LENGTH_SHORT).show();
+                customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getEveryone());
+                lv_customerList.setAdapter(customerArrayAdapter);
             }
         });
 
         btn_viewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "View all buttons", Toast.LENGTH_SHORT).show();
+                DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
+
+                //create array adapter with new instance of the object
+                customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getEveryone());
+                lv_customerList.setAdapter(customerArrayAdapter);
+                //Toast.makeText(MainActivity.this, everyOne.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        lv_customerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                CustomerModel clickedCustomer = (CustomerModel) adapterView.getItemAtPosition(i);
+                databaseHelper.deleteOne(clickedCustomer);
+
+                //create array adapter with new instance of the object
+                customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getEveryone());
+                lv_customerList.setAdapter(customerArrayAdapter);
+
+                Toast.makeText(MainActivity.this, "Delete" + clickedCustomer.toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        btn_searchList.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_searchList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Log.e("MainActivity", "Search Submitted:" + s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.e("MainActivity", "Text:" + s);
+
+                return false;
             }
         });
 
