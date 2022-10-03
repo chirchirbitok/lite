@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     ListView lv_customerList;
     ArrayAdapter customerArrayAdapter;
     DatabaseHelper databaseHelper;
+    String customerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,21 +106,27 @@ public class MainActivity extends AppCompatActivity {
         search_barr.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                databaseHelper.searchCustomer(s);
-                Log.e("MainActivity", "Search Submitted:" + s);
-                customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.searchCustomer(s));
-                lv_customerList.setAdapter(customerArrayAdapter);
-                //Toast.makeText(MainActivity.this, "Search submitted", Toast.LENGTH_SHORT).show();
+//                databaseHelper.searchCustomer(s);
+//                Log.e("MainActivity", "Search Submitted:" + s);
+//                customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getEveryone());
+//                customerArrayAdapter.getFilter().filter(s);
+//                lv_customerList.setAdapter(customerArrayAdapter);
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
 //                Log.e("MainActivity", "Text:" + s);
+                customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getEveryone());
+                customerArrayAdapter.getFilter().filter(s);
+                lv_customerList.setAdapter(customerArrayAdapter);
 
                 return false;
             }
+
         });
+
 
     }
 }

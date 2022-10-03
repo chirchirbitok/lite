@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -18,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CUSTOMER_AGE = "CUSTOMER_AGE";
     public static final String COLUMN_ACTIVE_CUSTOMER = "ACTIVE_CUSTOMER";
     public static final String COLUMN_ID = "ID";
+    private String s;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, "customer.db", null, 1);
@@ -71,8 +73,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<CustomerModel> searchCustomer(String s){
+        this.s = s;
         List<CustomerModel> returnList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
+        Log.e("MainActivity", "Search Received:" + s);
         String querySearch = "SELECT * FROM CUSTOMER_TABLE WHERE (CUSTOMER_NAME LIKE '%Douglas%' OR ID LIKE '%2%') ";
 
 
